@@ -1,0 +1,34 @@
+# macOS / editor files
+.DS_Store
+*.swp
+
+# SwiftPM / Xcode caches and per-user settings
+.build/
+.build-*/
+.swiftpm/
+DerivedData/
+*.xcuserstate
+**/xcuserdata/
+
+# Local generated projects and signing configuration
+CourseListDevice.xcodeproj/
+CourseListiPhoneOnly.xcodeproj/
+Config/Device-*
+*.xcarchive/
+*.ipa
+*.dSYM/
+*.mobileprovision
+*.p12
+*.p8
+*.cer
+.env
+.env.*
+!.env.example
+
+# Local release / verification / rollback artifacts
+.implementation/
+CourseList 20*/
+MODIFIED_FILE*
+DIFF_FILE*
+VERIFICATION.txt
+ROLLBACK.sh

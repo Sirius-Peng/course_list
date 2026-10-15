@@ -1,0 +1,189 @@
+name: CourseList
+options:
+  bundleIdPrefix: dev.courselist
+  deploymentTarget:
+    iOS: '26.0'
+    watchOS: '26.0'
+  xcodeVersion: '26.6'
+  createIntermediateGroups: true
+packages:
+  ScheduleCore:
+    path: .
+settings:
+  base:
+    SWIFT_VERSION: '5.0'
+    SWIFT_STRICT_CONCURRENCY: targeted
+    MARKETING_VERSION: 0.4.0
+    CURRENT_PROJECT_VERSION: '5'
+    DEVELOPMENT_TEAM: ''
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_USER_SCRIPT_SANDBOXING: true
+    GENERATE_INFOPLIST_FILE: true
+    INFOPLIST_KEY_CFBundleDisplayName: 课表
+    COURSELIST_APP_GROUP: group.dev.courselist.shared
+targets:
+  CourseListApp:
+    type: application
+    platform: iOS
+    sources:
+    - Apps/iPhone
+    - Shared
+    - path: Assets/iPhone.xcassets
+      optional: true
+    dependencies:
+    - package: ScheduleCore
+    - target: CourseListWidgets
+      embed: true
+    - target: CourseListWatchApp
+      embed: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.courselist.app
+        TARGETED_DEVICE_FAMILY: '1'
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    entitlements:
+      path: Config/iPhone.entitlements
+      properties:
+        com.apple.security.application-groups:
+        - group.dev.courselist.shared
+    info:
+      path: Config/iPhone-Info.plist
+      properties:
+        CFBundleDisplayName: 课表
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UISupportedInterfaceOrientations:
+        - UIInterfaceOrientationPortrait
+        CFBundleURLTypes:
+        - CFBundleURLName: dev.courselist.app
+          CFBundleURLSchemes:
+          - courselist
+        CourseListAppGroupIdentifier: $(COURSELIST_APP_GROUP)
+        BGTaskSchedulerPermittedIdentifiers:
+        - dev.courselist.app.reminders
+        - dev.courselist.app.ics-refresh
+        UIBackgroundModes:
+        - fetch
+    attributes:
+      SystemCapabilities:
+        com.apple.ApplicationGroups.iOS:
+          enabled: 1
+  CourseListWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+    - Widgets
+    - Shared/PlatformStore.swift
+    dependencies:
+    - package: ScheduleCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.courselist.app.widgets
+        APPLICATION_EXTENSION_API_ONLY: true
+        SKIP_INSTALL: true
+    entitlements:
+      path: Config/iPhoneWidget.entitlements
+      properties:
+        com.apple.security.application-groups:
+        - group.dev.courselist.shared
+    info:
+      path: Config/iPhoneWidget-Info.plist
+      properties:
+        CFBundleDisplayName: 课表
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+        CourseListAppGroupIdentifier: $(COURSELIST_APP_GROUP)
+    attributes:
+      SystemCapabilities:
+        com.apple.ApplicationGroups.iOS:
+          enabled: 1
+  CourseListWatchApp:
+    type: application
+    platform: watchOS
+    sources:
+    - Apps/Watch
+    - Shared
+    - path: Assets/Watch.xcassets
+      optional: true
+    dependencies:
+    - package: ScheduleCore
+    - target: CourseListWatchWidgets
+      embed: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.courselist.app.watch
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        SKIP_INSTALL: true
+    entitlements:
+      path: Config/Watch.entitlements
+      properties:
+        com.apple.security.application-groups:
+        - group.dev.courselist.shared
+    info:
+      path: Config/Watch-Info.plist
+      properties:
+        CFBundleDisplayName: 课表
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: dev.courselist.app
+        CFBundleURLTypes:
+        - CFBundleURLName: dev.courselist.app.watch
+          CFBundleURLSchemes:
+          - courselist
+        CourseListAppGroupIdentifier: $(COURSELIST_APP_GROUP)
+    attributes:
+      SystemCapabilities:
+        com.apple.ApplicationGroups.iOS:
+          enabled: 1
+  CourseListWatchWidgets:
+    type: app-extension
+    platform: watchOS
+    sources:
+    - Widgets
+    - Shared/PlatformStore.swift
+    dependencies:
+    - package: ScheduleCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.courselist.app.watch.widgets
+        APPLICATION_EXTENSION_API_ONLY: true
+        SKIP_INSTALL: true
+    entitlements:
+      path: Config/WatchWidget.entitlements
+      properties:
+        com.apple.security.application-groups:
+        - group.dev.courselist.shared
+    info:
+      path: Config/WatchWidget-Info.plist
+      properties:
+        CFBundleDisplayName: 课表
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+        CourseListAppGroupIdentifier: $(COURSELIST_APP_GROUP)
+    attributes:
+      SystemCapabilities:
+        com.apple.ApplicationGroups.iOS:
+          enabled: 1
+  CourseListUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+    - UITests
+    dependencies:
+    - target: CourseListApp
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.courselist.app.uitests
+        TEST_TARGET_NAME: CourseListApp
+schemes:
+  CourseListApp:
+    build:
+      targets:
+        CourseListApp: all
+    test:
+      targets:
+      - CourseListUITests
+  CourseListWatchApp:
+    build:
+      targets:
+        CourseListWatchApp: all
